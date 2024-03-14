@@ -15,8 +15,10 @@ public class Turtle extends BaseActor {
 
         loadAnimationFromFiles(fileNames, 0.1f, true);
 
+        setBoundaryPolygon(8);
+
         setAcceleration(400);
-        setMaxSpeed(100);
+        setMaxSpeed(200);
         setDeceleration(400);
     }
 
