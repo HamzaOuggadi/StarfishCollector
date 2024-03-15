@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
 import net.hamzaouggadi.entities.BaseActor;
 import net.hamzaouggadi.entities.GameBeta;
+import net.hamzaouggadi.entities.Rock;
 import net.hamzaouggadi.entities.Starfish;
 import net.hamzaouggadi.entities.Turtle;
 import net.hamzaouggadi.entities.Whirlpool;
@@ -15,6 +16,7 @@ public class Main extends GameBeta {
 
     private Turtle turtle;
     private Starfish starfish;
+    private Rock rock;
     private BaseActor ocean;
 
     @Override
@@ -26,10 +28,14 @@ public class Main extends GameBeta {
         starfish = new Starfish(380,380, mainStage);
 
         turtle = new Turtle(20, 20, mainStage);
+
+        rock = new Rock(200, 200, mainStage);
     }
 
     @Override
     public void update(float dt) {
+
+        turtle.preventOverlap(rock);
 
         if (turtle.overlaps(starfish) && !starfish.isCollected()) {
             starfish.collect();
