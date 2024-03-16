@@ -15,6 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BaseActor extends Actor {
 
     private Animation<TextureRegion> animation;
@@ -58,7 +61,7 @@ public class BaseActor extends Actor {
         super.draw(batch, parentAlpha);
 
         Color color = getColor();
-        batch.setColor(color);
+        batch.setColor(color.r, color.g, color.b, color.a);
 
         if (animation != null && isVisible()) {
             batch.draw(animation.getKeyFrame(elapsedTime),
@@ -296,5 +299,29 @@ public class BaseActor extends Actor {
         this.moveBy(mtv.normal.x * mtv.depth, mtv.normal.y * mtv.depth);
         return mtv.normal;
     }
+
+    public static ArrayList<BaseActor> getList(Stage stage, String className) {
+        ArrayList<BaseActor> list = new ArrayList<>();
+
+        Class theClass = null;
+
+        try {
+            theClass = Class.forName(className);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        for (Actor a : stage.getActors()) {
+            if (theClass.isInstance(a)) {
+                list.add((BaseActor) a);
+            }
+        }
+        return list;
+    }
+
+    public static int count(Stage stage, String className) {
+        return getList(stage, className).size();
+    }
+
 
 }
