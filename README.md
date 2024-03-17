@@ -1,6 +1,16 @@
 # StarfishCollector
 
-![img.png](img.png)
+## Menu Screen
+
+![img_1.png](img_1.png)
+
+## Gameplay Screen
+
+![img_2.png](img_2.png)
+
+## Win Screen
+
+![img_3.png](img_3.png)
 
 ## Platforms
 

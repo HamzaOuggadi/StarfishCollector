@@ -1,18 +1,8 @@
-package net.hamzaouggadi;
-
+package net.hamzaouggadi.entities;
 
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
-import net.hamzaouggadi.entities.BaseActor;
-import net.hamzaouggadi.entities.GameBeta;
-import net.hamzaouggadi.entities.Rock;
-import net.hamzaouggadi.entities.Starfish;
-import net.hamzaouggadi.entities.Turtle;
-import net.hamzaouggadi.entities.Whirlpool;
-
-
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
-public class Main extends GameBeta {
+public class LevelScreen extends BaseScreen {
 
     private Turtle turtle;
     private boolean win;
@@ -20,8 +10,10 @@ public class Main extends GameBeta {
     @Override
     public void initialize() {
         BaseActor ocean = new BaseActor(0, 0, mainStage);
-        ocean.loadTexture("imgs/water.jpg");
-        ocean.setSize(800, 600);
+        ocean.loadTexture("imgs/water-border.jpg");
+        ocean.setSize(1200, 900);
+
+        BaseActor.setWorldBounds(ocean);
 
         new Starfish(400, 400, mainStage);
         new Starfish(500, 100, mainStage);
@@ -58,11 +50,11 @@ public class Main extends GameBeta {
 
         if (BaseActor.count(mainStage, Starfish.class.getName()) == 0 && !win) {
             win = true;
-            BaseActor youWinMessage = new BaseActor(0, 0, mainStage);
+            BaseActor youWinMessage = new BaseActor(0, 0, uiStage);
             youWinMessage.loadTexture("imgs/you-win.png");
             youWinMessage.centerAtPosition(400, 300);
             youWinMessage.setOpacity(0);
-            youWinMessage.addAction(Actions.delay(1));
+            youWinMessage.addAction(Actions.delay(0.1f));
             youWinMessage.addAction(Actions.after(Actions.fadeIn(1)));
         }
     }
