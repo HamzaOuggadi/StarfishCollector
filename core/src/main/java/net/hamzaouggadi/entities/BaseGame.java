@@ -1,6 +1,8 @@
 package net.hamzaouggadi.entities;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 
 public class BaseGame extends Game {
 
@@ -16,6 +18,8 @@ public class BaseGame extends Game {
 
     @Override
     public void create() {
-
+        // Prepare for multiple classes stages to receive discrete input
+        InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 }

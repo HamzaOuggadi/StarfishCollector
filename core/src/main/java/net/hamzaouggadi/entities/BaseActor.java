@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -21,7 +22,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseActor extends Actor {
+public class BaseActor extends Group {
 
     private Animation<TextureRegion> animation;
     private float elapsedTime;
@@ -34,7 +35,6 @@ public class BaseActor extends Actor {
     private Polygon boundaryPolygon;
     private static Rectangle worldBounds;
 
-
     public BaseActor(float x, float y, Stage stage) {
         super();
 
@@ -42,10 +42,11 @@ public class BaseActor extends Actor {
         elapsedTime = 0f;
         isAnimationPaused = false;
         velocityVec = new Vector2(0f,0f);
-        accelerationVec = new Vector2(0f,0f);
+        accelerationVec = new Vector2(0f, 0f);
         acceleration = 0f;
         maxSpeed = 1000f;
         deceleration = 0f;
+        boundaryPolygon = null;
 
         setPosition(x, y);
         stage.addActor(this);
@@ -54,16 +55,15 @@ public class BaseActor extends Actor {
     @Override
     public void act(float delta) {
         super.act(delta);
-
         if (!isAnimationPaused) {
             elapsedTime += delta;
         }
     }
 
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a);
 
@@ -107,7 +107,7 @@ public class BaseActor extends Actor {
             textureArray.add(new TextureRegion(texture));
         }
 
-        Animation<TextureRegion> anim = new Animation<TextureRegion>(frameDuration, textureArray);
+        Animation<TextureRegion> anim = new Animation<>(frameDuration, textureArray);
 
         if (loop) {
             anim.setPlayMode(Animation.PlayMode.LOOP);
@@ -133,7 +133,7 @@ public class BaseActor extends Actor {
 
         TextureRegion[][] temp = TextureRegion.split(texture, frameWidth, frameHeight);
 
-        Array<TextureRegion> textureArray = new Array<>();
+        Array<TextureRegion> textureArray = new Array<TextureRegion>();
 
         for (int r=0; r<rows; r++) {
             for (int c=0; c<columns; c++) {
@@ -293,7 +293,7 @@ public class BaseActor extends Actor {
             return null;
         }
 
-        MinimumTranslationVector mtv = new MinimumTranslationVector();
+        Intersector.MinimumTranslationVector mtv = new Intersector.MinimumTranslationVector();
         boolean polygonOverlap = Intersector.overlapConvexPolygons(polygon1, polygon2, mtv);
 
         if (!polygonOverlap) {
@@ -304,6 +304,12 @@ public class BaseActor extends Actor {
         return mtv.normal;
     }
 
+    /**
+     * Returns a list of all the BaseActors in the given Stage
+     * @param stage
+     * @param className
+     * @return
+     */
     public static ArrayList<BaseActor> getList(Stage stage, String className) {
         ArrayList<BaseActor> list = new ArrayList<>();
 
@@ -369,6 +375,21 @@ public class BaseActor extends Actor {
             worldBounds.height - camera.viewportHeight/2);
 
         camera.update();
+    }
+
+    public void wrapAroundWorld() {
+        if (getX() + getWidth() < 0) {
+            setX(worldBounds.width);
+        }
+        if (getX() > worldBounds.width) {
+            setX(-getWidth());
+        }
+        if (getY() + getHeight() < 0) {
+            setY(worldBounds.height);
+        }
+        if (getY() > worldBounds.height) {
+            setY(-getHeight());
+        }
     }
 
 }
