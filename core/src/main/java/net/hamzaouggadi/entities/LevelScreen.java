@@ -1,11 +1,26 @@
 package net.hamzaouggadi.entities;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+
+import net.hamzaouggadi.StarfishGame;
 
 public class LevelScreen extends BaseScreen {
 
     private Turtle turtle;
     private boolean win;
+    private Label starfishLabel;
+
+    private DialogBox dialogBox;
 
     @Override
     public void initialize() {
@@ -26,6 +41,51 @@ public class LevelScreen extends BaseScreen {
         new Rock(450, 200, mainStage);
 
         turtle = new Turtle(20, 20, mainStage);
+
+        starfishLabel = new Label("Starfish Left : ", BaseGame.labelStyle);
+        starfishLabel.setColor(Color.CYAN);
+
+
+
+        ButtonStyle buttonStyle = new ButtonStyle();
+        Texture buttonTexture = new Texture(Gdx.files.internal("imgs/undo.png"));
+        TextureRegion buttonRegion = new TextureRegion(buttonTexture);
+        buttonStyle.up = new TextureRegionDrawable(buttonRegion);
+
+        Button restartButton = new Button(buttonStyle);
+        restartButton.setColor(Color.CYAN);
+
+
+        uiTable.pad(10);
+        uiTable.add(starfishLabel).top();
+        uiTable.add().expandX().expandY();
+        uiTable.add(restartButton).top();
+
+        restartButton.addListener((Event e) -> {
+            if ( !(e instanceof InputEvent) || !((InputEvent)e).getType().equals(InputEvent.Type.touchDown)) {
+                return false;
+            }
+            StarfishGame.setActiveScreen(new MenuScreen());
+            return false;
+        });
+
+
+        Sign sign1 = new Sign(20, 400, mainStage);
+        sign1.setText("West Starfish Bay");
+
+        Sign sign2 = new Sign(600, 300, mainStage);
+        sign2.setText("East Starfish Bay");
+
+        dialogBox = new DialogBox(0, 0, uiStage);
+        dialogBox.setBackgroundColor(Color.TAN);
+        dialogBox.setFontColor(Color.BROWN);
+        dialogBox.setDialogSize(600, 100);
+        dialogBox.setFontScale(0.80f);
+        dialogBox.alignCenter();
+        dialogBox.setVisible(false);
+
+        uiTable.row();
+        uiTable.add(dialogBox).colspan(3);
 
         win = false;
     }
@@ -57,5 +117,27 @@ public class LevelScreen extends BaseScreen {
             youWinMessage.addAction(Actions.delay(0.1f));
             youWinMessage.addAction(Actions.after(Actions.fadeIn(1)));
         }
+
+        for (BaseActor signActor : BaseActor.getList(mainStage, Sign.class.getName())) {
+
+            Sign sign = (Sign) signActor;
+            turtle.preventOverlap(sign);
+
+            boolean nearby = turtle.isWithinDistance(4, sign);
+
+            if (nearby && !sign.isViewing()) {
+                dialogBox.setText(sign.getText());
+                dialogBox.setVisible(true);
+                sign.setViewing(true);
+            }
+
+            if (sign.isViewing() && !nearby) {
+                dialogBox.setText(" ");
+                dialogBox.setVisible(false);
+                sign.setViewing(false);
+            }
+        }
+
+        starfishLabel.setText("Starfish Left : " + BaseActor.count(mainStage, "net.hamzaouggadi.entities.Starfish"));
     }
 }
