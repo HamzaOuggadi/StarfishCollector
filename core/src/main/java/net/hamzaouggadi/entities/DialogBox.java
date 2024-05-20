@@ -26,8 +26,8 @@ public class DialogBox extends BaseActor {
 
     public void setDialogSize(float width, float height) {
         this.setSize(width, height);
-        dialogLabel.setWidth(width - 2 * padding);
-        dialogLabel.setHeight(height - 2 * padding);
+        dialogLabel.setWidth(width - (2 * padding));
+        dialogLabel.setHeight(height - (2 * padding));
     }
 
     public void setText(String text) {
