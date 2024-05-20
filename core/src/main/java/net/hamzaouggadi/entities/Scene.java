@@ -53,9 +53,6 @@ public class Scene extends Actor {
     }
 
     public boolean isSceneFinished() {
-        System.out.println("is Scene finished  ? : " + (isLastSegment() && isSegmentFinished()));
-        System.out.println("is last segment : " + isLastSegment());
-        System.out.println("is Segment Finished : " + isSegmentFinished());
         return (isLastSegment() && isSegmentFinished());
     }
 

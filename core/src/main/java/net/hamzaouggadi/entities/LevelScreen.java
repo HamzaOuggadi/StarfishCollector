@@ -80,6 +80,13 @@ public class LevelScreen extends BaseScreen {
                 audioVolume = 1 - audioVolume;
                 instrumental.setVolume(audioVolume);
                 oceanSurf.setVolume(audioVolume);
+                if (muteButton.getColor().equals(Color.CYAN)) {
+                    System.out.println(" 1st Block : ************** Mute Button Color : " + muteButton.getColor());
+                    muteButton.setColor(Color.WHITE);
+                } else {
+                    System.out.println(" 2nd Block : ************** Mute Button Color : " + muteButton.getColor());
+                    muteButton.setColor(Color.CYAN);
+                }
                 return true;
             }
         );
